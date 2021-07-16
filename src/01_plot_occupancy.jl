@@ -30,8 +30,9 @@ function occupancy_by_lake(tensor, lakes)
 
 
     xaxis!("year")
-    yaxis!("proportion lakes occupied")
-    title!("Proportion of lakes occupied by each species")
+    yaxis!("proportion species present")
+    title!("Proportion of species in each lake")
+
 
     return plt
 end
@@ -56,8 +57,9 @@ function occupancy_by_species(tensor, species)
 
     ylims!(0,1)
     xaxis!("year")
-    yaxis!("proportion species present")
-    title!("Proportion of species in each lake")
+    yaxis!("proportion lakes occupied")
+
+    title!("Proportion of lakes occupied by each species")
     return plt
 end
 
