@@ -66,7 +66,7 @@ default(titlefont = ( "Computer Modern"), legendfont=(12, "Computer Modern"), le
 a = occupancy_by_lake(tensor, lowercase.(lakes))
 b  = occupancy_by_species(tensor, lowercase.(species))
 
-plot(a,b, layout=(2,1), size=(900,700), padding=5, dpi = 300)
+plot(a,b, layout=(2,1), size=(900,700), dpi = 300)
 
 
 savefig("occupancy_by_lake_and_species.png")
