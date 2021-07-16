@@ -18,7 +18,7 @@ function occupancy_by_lake(tensor, lakes)
         response[t, l] = sum(tensor[:,l,t]) / sum(ones(size(tensor[:,l,t])))
     end
 
-    plt = plot(size=(700,500), frame=:box, legend=:outerright, legendtitle="Species")
+    plt = plot(size=(700,500), frame=:box, legend=:outerright, legendtitle="Lake")
     
 
     clrs = palette(:RdBu_10)
