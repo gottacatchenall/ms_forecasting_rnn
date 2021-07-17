@@ -1,35 +1,51 @@
 import Flux
-using Flux: GRU, LSTM, RNN, Chain, Dense, ADAM, params, σ, onehot, reset!, tanh, train!, softmax
+using Flux: logitcrossentropy, Dropout,relu, GRU, LSTM, RNN, Chain, Dense, ADAM, params, σ, onehot, reset!, tanh, train!, softmax
 using StatsFuns: softmax, logit, logistic
+using Plots
+using StatsBase
+using ProgressMeter
 
 include(joinpath(".", "02_convert_to_features_and_labels.jl"))
 
-function getmodel()
+function getmodel(inputsize)
     return Chain(
-        GRU(timepts, 32), 
-        LSTM(32, 32), 
-        Dense(32, 16), 
-        Dense(16,1));
+        LSTM(inputsize, inputsize),
+        Dense(inputsize, 1, σ))
 end
 
-loss(x, y) = sum((Flux.stack(m.(x),1) .- y) .^ 2)
 
-function train(features, labels)
-    data = zip(features,labels)
-    m = getmodel()
-    ps = params(m)
-    opt= ADAM(1e-3)    
-    reset!(m)
-    train!(loss, ps, data, opt)
+function trainModel(features, labels;
+    nbatches = 5000,
+    matat = 100,
+    batchsize = 0.5,    
+)
+    themodel= getmodel(length(features[1][1]))
+    ps = params(themodel)
+    opt= ADAM()    
+    reset!(themodel)
+    
+    function loss(xs, ys)
+        l = sum(logitcrossentropy.(themodel.(xs), ys))
+        return l
+    end
+      
+    batchitems = Int32(floor(batchsize*length(labels)))
+    @showprogress for i in 1:nbatches    
+        ord = sample(1:length(labels), batchitems; replace=false)   
+        Xs = features[ord]
+        Ys = labels[ord]
+        data_batch = zip(Xs,Ys)
+        train!(loss, ps, data_batch, opt)
+    end 
 
-    return m
+    return themodel
 end
 
-timepts = 10
-features, labels = getfeatures(trainingyears=timepts)
-model = train(features, labels)
+features, labels = getfeatures(trainingyears=14)
+model, trainingloss, testloss = trainModel(features, labels)
 
 
 predict = [model.(features[i])[1][1] for i in 1:length(features)]
 
-scatter(predict, labels, legend=:none)
+scatter(predict, labels, ma=0.01, ms=5, legend=:none)
+

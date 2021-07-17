@@ -9,7 +9,8 @@ function getfeatures(; trainingyears = 10)
     labels = []
     for s in 1:length(species)
         for l in 1:length(lakes)
-            push!(features, [Float32.(training[s,l,:])])
+            timeseries = [Float32.([vec(training[s,l,:])...])]
+            push!(features, timeseries)
             push!(labels, [Float32.(training[s,l,begin])])
         end
     end
