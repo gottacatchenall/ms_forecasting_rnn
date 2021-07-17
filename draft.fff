@@ -1,0 +1,8 @@
+\begin{figure}
+\hypertarget{fig:occupancy}{%
+\centering
+\includegraphics{./figures/occupancy_by_lake_and_species.png}
+\caption{TODO: occupancy data. 1994? whats up with
+that?}\label{fig:occupancy}
+}
+\end{figure}
